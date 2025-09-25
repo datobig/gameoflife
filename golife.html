@@ -289,6 +289,7 @@
                 <div class="controls">
                     <button id="startBtn"><i class="fas fa-play"></i> Start</button>
                     <button id="pauseBtn" disabled><i class="fas fa-pause"></i> Pause</button>
+                    <button id="randomBtn"><i class="fas fa-dice"></i> Random Start</button>
                     <button id="resetBtn" class="reset-btn"><i class="fas fa-redo"></i> Reset Grid</button>
                 </div>
                 
@@ -367,6 +368,7 @@
         // Control buttons
         const startBtn = document.getElementById('startBtn');
         const pauseBtn = document.getElementById('pauseBtn');
+        const randomBtn = document.getElementById('randomBtn');
         const resetBtn = document.getElementById('resetBtn');
         
         // Controls for parameters
@@ -622,6 +624,21 @@
             
             cancelAnimationFrame(animationId);
             animationId = null;
+        });
+        
+        randomBtn.addEventListener('click', () => {
+            // Stop any running animation and reset controls
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            isRunning = false;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            
+            // Generate random pattern
+            randomizeGrid();
+            drawGrid();
         });
         
         resetBtn.addEventListener('click', () => {
