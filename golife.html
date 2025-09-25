@@ -82,12 +82,13 @@
         
         .controls {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             flex-wrap: wrap;
             justify-content: center;
             width: 100%;
             max-width: 600px;
-            margin-top: 15px;
+            margin-top: 20px;
+            margin-bottom: 30px;
         }
         
         button {
@@ -124,6 +125,7 @@
             gap: 20px;
             width: 100%;
             max-width: 600px;
+            margin-bottom: 20px;
         }
         
         .control-group {
@@ -585,22 +587,29 @@
         
         // Handle canvas click
         function handleCanvasClick(event) {
-            if (!isRunning) {
-                const rect = canvas.getBoundingClientRect();
-                const x = event.clientX - rect.left;
-                const y = event.clientY - rect.top;
-                
-                const col = Math.floor(x / config.cellSize);
-                const row = Math.floor(y / config.cellSize);
-                
-                // Toggle cell state
-                if (row >= 0 && row < config.rows && col >= 0 && col < config.cols) {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            const col = Math.floor(x / config.cellSize);
+            const row = Math.floor(y / config.cellSize);
+            
+            if (row >= 0 && row < config.rows && col >= 0 && col < config.cols) {
+                if (!isRunning) {
+                    // When paused: toggle cell state
                     grid[row][col] = grid[row][col] ? 0 : 1;
                     drawGrid();
                     
                     // Update stats immediately after manual change
                     generation++;
                     updateStats();
+                } else {
+                    // When running: only add cells to empty positions
+                    if (grid[row][col] === 0) {
+                        grid[row][col] = 1;
+                        drawGrid();
+                        updateStats();
+                    }
                 }
             }
         }
