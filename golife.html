@@ -621,9 +621,21 @@
             pauseBtn.disabled = true;
             
             cancelAnimationFrame(animationId);
+            animationId = null;
         });
         
-        resetBtn.addEventListener('click', initSimulation);
+        resetBtn.addEventListener('click', () => {
+            // Stop any running animation and reset controls
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            isRunning = false;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            
+            initSimulation();
+        });
         
         // Event listeners for parameter sliders
         rowsSlider.addEventListener('input', (e) => {
