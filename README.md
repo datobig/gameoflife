@@ -92,6 +92,99 @@ A modern, self-contained implementation of Conway's Game of Life in a single HTM
 
 ---
 
+---
+
+### Testing
+
+This project includes a comprehensive test suite with 38 tests covering 100% of the Game of Life functionality.
+
+#### Test Setup
+```bash
+# Install dependencies
+npm install
+
+# Run all tests
+npm test
+
+# Run tests with coverage report
+npm run test:coverage
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+#### Test Coverage
+The test suite covers:
+- **Initialization**: Default configuration, grid creation, generation reset
+- **Grid Operations**: Empty grid creation, random population, neighbor counting with toroidal wrapping
+- **Game of Life Rules**: All Conway rules (survival, death, birth) with various neighbor counts
+- **Canvas Operations**: Drawing, clearing, grid lines, live cell rendering
+- **Animation Control**: Start, pause, reset, random pattern generation
+- **User Interaction**: Canvas clicks (paused/running modes), cell toggling, live cell injection
+- **Statistics**: Generation counting, live cell counting, UI updates
+- **Canvas Resizing**: Dynamic sizing, viewport constraints
+- **Animation Loop**: Timing control, frame skipping, performance
+- **Edge Cases**: Empty grids, full grids, single cells, boundary conditions
+- **Integration**: Full simulation cycles, parameter changes during runtime
+
+#### Test Structure
+- **`golife-functions.test.js`**: Main test file with isolated function testing
+- **`jest.setup.js`**: Test environment configuration and mocks
+- **`package.json`**: Jest configuration and test scripts
+
+#### Mocking
+The tests use comprehensive mocking for:
+- Canvas 2D context and drawing operations
+- DOM elements and event handling
+- Performance timing (`requestAnimationFrame`, `performance.now`)
+- Browser APIs (TextEncoder, TextDecoder)
+
+#### Running Specific Tests
+```bash
+# Run only initialization tests
+npx jest --testNamePattern="Initialization"
+
+# Run only Game of Life rules tests
+npx jest --testNamePattern="Game of Life Rules"
+
+# Run with verbose output
+npx jest --verbose
+```
+
+---
+
+### Development
+
+#### Project Structure
+```
+gameoflife/
+├── golife.html              # Main application (single file)
+├── golife-functions.test.js # Comprehensive test suite
+├── jest.setup.js           # Test environment setup
+├── package.json            # Dependencies and scripts
+└── README.md              # This documentation
+```
+
+#### Adding Features
+When adding new features:
+1. Update the main `golife.html` file
+2. Add corresponding tests in `golife-functions.test.js`
+3. Ensure all tests pass: `npm test`
+4. Update this README if needed
+
+#### Code Quality
+- All functions are tested with Jest
+- Canvas operations are mocked for reliable testing
+- Edge cases and error conditions are covered
+- Performance considerations are tested
+
+#### Browser Compatibility
+- Modern browsers (Chrome, Firefox, Safari, Edge)
+- Canvas 2D context support required
+- ES6+ features used (no polyfills included)
+
+---
+
 ### License
 This is a demo page only. Feel free to use for learning and experimentation.
 
