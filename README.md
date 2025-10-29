@@ -13,21 +13,32 @@ A modern, self-contained implementation of Conway's Game of Life in a single HTM
 ---
 
 ### UI and Controls
-- **Canvas**: Displays the grid. When paused, click to toggle a cell between dead/alive.
-- **Buttons**:
-  - Start: Starts the simulation and animation.
-  - Pause: Pauses the simulation (enables manual editing via canvas clicks).
-  - Reset Grid: Clears the grid and resets the generation counter.
+- **Canvas**: Displays the grid. When paused, click to toggle a cell between dead/alive. When running, click to add live cells.
+- **Main Buttons**:
+  - **Start**: Starts the simulation and animation.
+  - **Pause**: Pauses the simulation (enables manual editing via canvas clicks).
+  - **Step**: Advances exactly one generation (perfect for analyzing patterns step-by-step).
+  - **Random Start**: Generates a random pattern on the grid.
+  - **Reset Grid**: Clears the grid and resets the generation counter.
+- **Pattern Controls**:
+  - **Pattern Selector**: Dropdown menu with 10 famous Conway patterns (Glider, LWSS, Pulsar, Gosper Glider Gun, Blinker, Toad, Beacon, Pentadecathlon, Block, Beehive).
+  - **Place Pattern**: Places the selected pattern at the center of the grid.
+- **Save/Load**:
+  - **Save Pattern**: Exports the current grid state as a JSON file for sharing or later use.
+  - **Load Pattern**: Imports a previously saved pattern from a JSON file.
 - **Sliders**:
-  - Rows: Number of grid rows (20–100).
-  - Columns: Number of grid columns (20–100).
-  - Cell Size: Pixel size per cell (2–15 px).
-  - Speed: Update speed (1–5) with labels: Fastest, Very Fast, Normal, Slow, Slower.
+  - **Rows**: Number of grid rows (20–100).
+  - **Columns**: Number of grid columns (20–100).
+  - **Cell Size**: Pixel size per cell (2–15 px).
+  - **Speed**: Update speed (1–5) with labels: Fastest, Very Fast, Normal, Slow, Slower.
+- **Advanced Options**:
+  - **Edge Behavior**: Toggle between toroidal (wrap-around) and fixed edges.
+  - **Color by Cell Age**: Toggle gradient coloring showing cell age: young (cyan) → mature (blue) → old (purple).
 - **Stats**:
-  - Generation: Number of simulated generations.
-  - Live Cells: Count of live cells in the current generation.
-  - Grid Size: Current size (rows × columns).
-  - Update Frequency: Human‑readable speed label based on the selected speed.
+  - **Generation**: Number of simulated generations.
+  - **Live Cells**: Count of live cells in the current generation.
+  - **Grid Size**: Current size (rows × columns).
+  - **Update Frequency**: Human‑readable speed label based on the selected speed.
 
 ---
 
@@ -43,8 +54,11 @@ A modern, self-contained implementation of Conway's Game of Life in a single HTM
 - **Single file**: All logic, styles, and markup live in `golife.html`.
 - **Rendering**: HTML5 `<canvas>` 2D context. Live cells are filled rectangles with a subtle glow and thin outline.
 - **Grid**: Two 2D arrays (`grid` and `nextGrid`) are swapped between generations for efficient updates.
-- **Edges**: Toroidal (wrap‑around) neighborhood. Neighbor lookups use modular arithmetic so patterns leaving one edge re‑enter from the opposite side.
+- **Cell Age Tracking**: Two additional arrays (`cellAges` and `nextCellAges`) track how many generations each cell has been alive.
+- **Edges**: Configurable boundary conditions - toroidal (wrap‑around) or fixed (edges are dead cells). Neighbor lookups adapt based on the `toroidalEdges` setting.
 - **Speed**: `Speed` 1–5 maps to millisecond intervals via `updateInterval`. Animation runs with `requestAnimationFrame` gated by elapsed time since last update.
+- **Pattern Library**: 10 preset patterns stored as coordinate arrays for easy placement.
+- **Save/Load**: Grid state serialized to JSON with metadata (dimensions, generation count, timestamp).
 - **Responsive size**: Canvas dimensions derive from `rows × cols × cellSize`, capped to the viewport to avoid overflow.
 - **Interaction**: Canvas clicks convert to `row/col` using `clientX/Y` relative to the canvas rect and current `cellSize`.
 - **Statistics**: Recomputed each update (live cell count, generation counter, speed labels).
@@ -54,9 +68,36 @@ A modern, self-contained implementation of Conway's Game of Life in a single HTM
 
 ### Common Workflows
 - **Draw custom patterns**:
-  1. Click "Pause" or don’t start the simulation yet.
+  1. Click "Pause" or don't start the simulation yet.
   2. Click on the canvas to toggle cells.
   3. Click "Start" to watch the evolution.
+
+- **Use preset patterns**:
+  1. Select a pattern from the dropdown (e.g., "Glider", "Pulsar").
+  2. Click "Place Pattern" to add it to the center of the grid.
+  3. Click "Start" to watch it evolve.
+
+- **Step through generations**:
+  1. Set up your pattern (draw manually or use presets).
+  2. Click "Step" repeatedly to advance one generation at a time.
+  3. Perfect for analyzing exactly how patterns evolve.
+
+- **Explore boundary conditions**:
+  1. Try a glider or spaceship pattern.
+  2. Toggle "Toroidal (Wrap Around)" on/off to see how it behaves at edges.
+  3. With toroidal: patterns wrap around. Without: edges act as walls.
+
+- **Visualize cell age**:
+  1. Start any simulation.
+  2. Enable "Color by Cell Age" checkbox.
+  3. Watch colors change: cyan (young) → blue (mature) → purple (old/stable).
+  4. Great for identifying still lifes and oscillators!
+
+- **Save and share patterns**:
+  1. Create an interesting pattern.
+  2. Click "Save Pattern" to download as JSON.
+  3. Share the file with others or save for later.
+  4. Click "Load Pattern" to import saved patterns.
 
 - **Change grid size**:
   - Adjust "Rows" and/or "Columns". The simulation re‑initializes with the new size and resets generation.
@@ -76,12 +117,21 @@ A modern, self-contained implementation of Conway's Game of Life in a single HTM
 
 ---
 
-### Extensibility Ideas
-- Add preset patterns (e.g., glider, pulsar) via buttons that stamp cells into the grid.
-- Export/import grid state (e.g., JSON) for sharing patterns.
-- Single‑step execution ("Step") to advance one generation at a time.
-- Toggle boundary conditions (toroidal vs fixed edges).
-- Color themes for different pattern types or cell ages.
+### New Features (Recently Added!)
+- ✅ **Step Mode**: Advance exactly one generation at a time for detailed analysis
+- ✅ **Preset Patterns Library**: 10 famous Conway patterns ready to use
+- ✅ **Save/Load System**: Export and import patterns as JSON files
+- ✅ **Alternative Boundary Conditions**: Toggle between toroidal and fixed edges
+- ✅ **Cell Age Coloring**: Visual gradient showing how long cells have been alive
+
+### Future Enhancement Ideas
+- Pattern detection and auto-labeling (identify gliders, oscillators, still lifes)
+- Export animations to GIF or video
+- Touch/drag drawing for mobile devices
+- Zoom and pan controls for large grids
+- Pattern history with undo/redo functionality
+- Multiple simulation rules (not just Conway's original rules)
+- Custom color themes and visual styles
 
 ---
 
